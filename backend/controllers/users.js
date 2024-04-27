@@ -9,8 +9,8 @@ export const getOneById = async (id) => {
         let result = await db.execute([parseInt(id)]);
 
         return result;
-    }catch(errors){
-        console.log(errors);
+    }catch(error){
+        console.log(error);
     }
 }
 
@@ -23,8 +23,8 @@ export const getOneByEmail = async (email) => {
         let result = await db.execute([email]);
 
         return result;
-    }catch(errors){
-        console.log(errors);
+    }catch(error){
+        console.log(error);
     }
 }
 
@@ -37,8 +37,8 @@ export const insertOne = async (user) => {
         let result = await db.execute([user.firstName, user.lastName, user.email, user.password, user.phoneNumber]);
 
         return result.insertId;
-    }catch(errors){
-        console.log(errors);
+    }catch(error){
+        console.log(error);
     }
 }
 
@@ -51,7 +51,7 @@ export const deleteOne = async (id) => {
         let result = await db.execute([parseInt(id)]);
 
         return result.affectedRows;
-    }catch(errors){
+    }catch(error){
         console.log('Error deleting user - /backend/controllers/users.js:deleteOne()');
         throw new Error();
     }
@@ -66,7 +66,7 @@ export const getHashedPasswordByEmail = async (email) => {
         let result = await db.execute([email]);
 
         return result[0].password;
-    }catch(errors){
-        console.log(errors);
+    }catch(error){
+        console.log(error);
     }
 }

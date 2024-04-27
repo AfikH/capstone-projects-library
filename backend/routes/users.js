@@ -2,6 +2,8 @@ import express from 'express';
 import bcrypt from 'bcrypt';
 
 import * as users from '../controllers/users.js';
+import * as token from '../lib/token.js';
+import { auth } from '../middleware/auth.js';
 
 const router = express.Router();
 
@@ -15,14 +17,22 @@ router.post('/authenticate', async (req, res) => {
             throw { status: 401, msg: "Wrong email or password." }
         }
 
+        // Set cookie    
+        res.cookie('access_token', token.generate(req.body.email), {
+            maxAge: 1000 * 60 * 15, // would expire after 15 minutes
+            httpOnly: true, // The cookie only accessible by the web server
+            signed: true // Indicates if the cookie should be signed
+        });
+
         res.status(200).json({
             ok: true,
             msg: "User has been authenticated successfully."
         });
-    }catch(errors){
-        res.status(errors.status || 400).json({
+    }catch(error){
+        console.log(error);
+        res.status(error.status || 400).json({
             ok: false,
-            msg: errors.msg || "There was an error authenticating the user."
+            msg: error.msg || "There was an error authenticating the user."
         });
     }
 });
@@ -40,21 +50,12 @@ router.get('/:id', async (req, res) => {
             msg: "User has been selected successfully.",
             user: user[0]
         });
-    }catch(errors){
-        res.status(errors.status || 400).json({
+    }catch(error){
+        res.status(error.status || 400).json({
             ok: false,
-            msg: errors.msg || "There was an error creating a user."
+            msg: error.msg || "There was an error creating a user."
         });
     }
-});
-
-router.put('/:id', (req, res) => {
-    // TODO:: Update user data with req.body data
-
-    res.status(200).json({
-        ok: true,
-        msg: "User has been updated successfully."
-    });
 });
 
 router.post('/', async (req, res) => {
@@ -83,12 +84,21 @@ router.post('/', async (req, res) => {
             msg: "User has been created successfully.",
             id: userId
         });
-    }catch(errors){
-        res.status(errors.status || 400).json({
+    }catch(error){
+        res.status(error.status || 400).json({
             ok: false,
-            msg: errors.msg || "There was an error creating a user."
+            msg: error.msg || "There was an error creating a user."
         });
     }
+});
+
+router.put('/:id', auth(), (req, res) => {
+    // TODO:: Update user data with req.body data
+
+    res.status(200).json({
+        ok: true,
+        msg: "User has been updated successfully."
+    });
 });
 
 router.delete('/:id', async (req, res) => {
@@ -101,10 +111,10 @@ router.delete('/:id', async (req, res) => {
             ok: true,
             msg: "User has been deleted successfully."
         });
-    }catch(errors){
-        res.status(errors.status || 400).json({
+    }catch(error){
+        res.status(error.status || 400).json({
             ok: false,
-            msg: errors.msg || "There was an error creating a user."
+            msg: error.msg || "There was an error creating a user."
         });
     }
 });
