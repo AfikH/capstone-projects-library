@@ -1,0 +1,194 @@
+@import url(./reset.css);
+@import url(./fonts.css);
+
+:root{
+    /* main header */
+    --main-header-height: max(12.5vh, 125px);
+    --main-header-height: max(12.5dvh, 125px);
+
+    /* sizes */
+    --size-tin: 1rem;
+    --size-sml: 2rem;
+    --size-mid: 3rem;
+    --size-big: 6rem;
+    --size-lrg: 12rem;
+    --size-con: 20vw;
+
+    /* colors */
+    --color-background-0: #FFFFFF;
+    --color-background-1: #FFFFFF;
+
+    --color-text-2: #444444;
+
+    --rgb-on-bg: 0, 0, 0;
+}
+
+/* general */
+*{
+    box-sizing: border-box;
+}
+
+html{
+    font-size: 3pt;
+}
+
+body{
+    background: var(--color-background-1);
+    font-family: 'Noto Sans Normal', Tahoma, Verdana, sans-serif;
+    font-size: 4rem;
+    color: var(--color-text-2);
+}
+
+/* main header */
+.main-header{
+    padding: var(--size-mid) var(--size-con);
+    height: var(--main-header-height);
+    background: var(--color-background-0);
+    border-bottom: 2px solid rgba(var(--rgb-on-bg), 0.05);    
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: space-between;
+    align-items: center;
+    transition: padding .1s;
+}
+
+.main-header-logo, .main-header-logo img{
+    height: 100%;
+}
+
+.main-header-guest,
+.main-header-authenticated{
+    display: flex;
+    flex-flow: row wrap;
+    align-items: center;
+    gap: var(--size-sml);
+}
+
+.main-header-guest a,
+.main-header-guest a:link,
+.main-header-guest a:visited{
+    padding: var(--size-sml);
+    min-width: 70px;
+    border: 1px solid rgba(var(--rgb-on-bg), 0.25);
+    color: var(--color-text-2);
+    text-decoration: none;
+    text-align: center;
+    transition: all .1s;
+}
+
+.main-header-guest a:hover{
+    background: var(--color-text-2);
+    border-color: var(--color-text-2);
+    color: var(--color-background-0);
+}
+
+.main-header-authenticated > .name{
+    font-size: 4.5rem;
+}
+
+.main-header-authenticated-buttons{
+    display: flex;
+    flex-flow: row wrap;
+    align-items: center;
+    gap: var(--size-tin);
+}
+
+.main-header-authenticated-menu-container{
+    position: relative;
+}
+
+.main-header-authenticated-menu-button{
+    padding: var(--size-tin);
+    height: 30px;
+    width: 30px;
+    background: none;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.main-header-authenticated-menu-button > img.chevron{
+    height: 100%;
+    width: 100%;
+    object-fit: contain;
+    object-position: center;
+}
+
+.main-header-authenticated-menu-button:hover,
+.main-header-authenticated-menu-container.menu-active .main-header-authenticated-menu-button{
+    background: rgba(var(--rgb-on-bg), 0.05);
+}
+
+.main-header-authenticated-menu-container.menu-active .main-header-authenticated-menu-button{
+    rotate: 180deg;
+}
+
+.main-header-authenticated-menu{
+    position: absolute;
+    top: calc(100% + var(--size-mid));
+    right: 0;
+    height: auto;
+    display: flex;
+    flex-flow: column nowrap;
+    background: var(--color-background-0);
+    border: 1px solid rgba(var(--rgb-on-bg), 0.25);
+    border-radius: 8px;
+    overflow: hidden;
+    transition: opacity .1s;
+}
+
+.main-header-authenticated-menu-container:not(.menu-active) .main-header-authenticated-menu{
+    opacity: 0;
+    pointer-events: none;
+}
+
+.main-header-authenticated-menu > a,
+.main-header-authenticated-menu > a:link,
+.main-header-authenticated-menu > a:visited{
+    padding: var(--size-sml);
+    color: var(--color-text-2);
+    text-decoration: none;
+    white-space: nowrap;
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: center;
+    gap: var(--size-mid);
+    transition: background .1s;
+}
+
+.main-header-authenticated-menu > a:hover,
+.main-header-authenticated-menu > a.active{
+    background: rgba(var(--rgb-on-bg), 0.05);
+}
+
+.main-header-authenticated-menu > a.active{
+    pointer-events: none;
+}
+
+@media only screen and (max-width: 1600px){
+    :root{
+        /* sizes */
+        --size-con: 15vw;
+    }
+}
+
+@media only screen and (max-width: 1200px){
+    :root{
+        /* sizes */
+        --size-con: 10vw;
+    }
+}
+
+@media only screen and (max-width: 900px){
+    :root{
+        /* sizes */
+        --size-con: 5vw;
+    }
+}
+
+@media only screen and (max-width: 600px){
+    :root{
+        /* sizes */
+        --size-con: var(--size-mid);
+    }
+}
