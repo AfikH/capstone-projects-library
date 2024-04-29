@@ -7,57 +7,6 @@ import { auth } from '../middleware/auth.js';
 
 const router = express.Router();
 
-router.post('/authenticate', async (req, res) => {
-    try{
-        let hashedPassword = await users.getHashedPasswordByEmail(req.body.email);
-        
-        let authenticated = await bcrypt.compare(req.body.password, hashedPassword);
-
-        if(!authenticated){
-            throw { status: 401, msg: "Wrong email or password." }
-        }
-
-        // Set cookie    
-        res.cookie('access_token', token.generate(req.body.email), {
-            maxAge: 1000 * 60 * 15, // would expire after 15 minutes
-            httpOnly: true, // The cookie only accessible by the web server
-            signed: true // Indicates if the cookie should be signed
-        });
-
-        res.status(200).json({
-            ok: true,
-            msg: "User has been authenticated successfully."
-        });
-    }catch(error){
-        console.log(error);
-        res.status(error.status || 400).json({
-            ok: false,
-            msg: error.msg || "There was an error authenticating the user."
-        });
-    }
-});
-
-router.get('/:id', async (req, res) => {
-    try{
-        let user = await users.getOneById(req.params.id);
-
-        if(user.length <= 0){
-            throw { status: 404, msg: "User with specified id doesn't exist in the database." }
-        }
-    
-        res.status(200).json({
-            ok: true,
-            msg: "User has been selected successfully.",
-            user: user[0]
-        });
-    }catch(error){
-        res.status(error.status || 400).json({
-            ok: false,
-            msg: error.msg || "There was an error creating a user."
-        });
-    }
-});
-
 router.post('/', async (req, res) => {
     let user = {
         firstName: req.body.firstName,
@@ -92,6 +41,27 @@ router.post('/', async (req, res) => {
     }
 });
 
+router.get('/:id', async (req, res) => {
+    try{
+        let user = await users.getOneById(req.params.id);
+
+        if(user.length <= 0){
+            throw { status: 404, msg: "User with specified id doesn't exist in the database." }
+        }
+    
+        res.status(200).json({
+            ok: true,
+            msg: "User has been selected successfully.",
+            user: user[0]
+        });
+    }catch(error){
+        res.status(error.status || 400).json({
+            ok: false,
+            msg: error.msg || "There was an error creating a user."
+        });
+    }
+});
+
 router.put('/:id', auth(), (req, res) => {
     // TODO:: Update user data with req.body data
 
@@ -115,6 +85,36 @@ router.delete('/:id', async (req, res) => {
         res.status(error.status || 400).json({
             ok: false,
             msg: error.msg || "There was an error creating a user."
+        });
+    }
+});
+
+router.post('/authenticate', async (req, res) => {
+    try{
+        let hashedPassword = await users.getHashedPasswordByEmail(req.body.email);
+        
+        let authenticated = await bcrypt.compare(req.body.password, hashedPassword);
+
+        if(!authenticated){
+            throw { status: 401, msg: "Wrong email or password." }
+        }
+
+        // Set cookie    
+        res.cookie('access_token', token.generate(req.body.email), {
+            maxAge: 1000 * 60 * 15, // would expire after 15 minutes
+            httpOnly: true, // The cookie only accessible by the web server
+            signed: true // Indicates if the cookie should be signed
+        });
+
+        res.status(200).json({
+            ok: true,
+            msg: "User has been authenticated successfully."
+        });
+    }catch(error){
+        console.log(error);
+        res.status(error.status || 400).json({
+            ok: false,
+            msg: error.msg || "There was an error authenticating the user."
         });
     }
 });
