@@ -1,0 +1,33 @@
+GET http://localhost:8000/projects HTTP/1.1
+
+###
+
+GET http://localhost:8000/projects/1 HTTP/1.1
+
+###
+
+POST http://localhost:8000/projects HTTP/1.1
+content-type: application/json
+
+{
+    "title": "First Project",
+    "content": "Project content",
+    "degree": "BSc"
+}
+
+###
+
+PUT http://localhost:8000/projects/1 HTTP/1.1
+content-type: application/json
+
+{
+    "firstName": "Afik",
+    "lastName": "Habaz",
+    "email": "afikhabaz@gmail.com",
+    "password": "123456",
+    "phoneNumber": "+972 526781505"
+}
+
+###
+
+DELETE http://localhost:8000/projects/2 HTTP/1.1
