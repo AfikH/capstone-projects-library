@@ -1,5 +1,19 @@
 import Db from "../lib/db.js";
 
+export const insertOne = async (user) => {
+    let db = new Db();
+
+    try{
+        await db.createConnection();
+        await db.prepare('INSERT INTO users (first_name, last_name, email, password, phone_number) VALUES (?,?,?,?,?)');
+        let result = await db.execute([user.firstName, user.lastName, user.email, user.password, user.phoneNumber]);
+
+        return result.insertId;
+    }catch(error){
+        console.log(error);
+    }
+}
+
 export const getOneById = async (id) => {
     let db = new Db();
 
@@ -23,20 +37,6 @@ export const getOneByEmail = async (email) => {
         let result = await db.execute([email]);
 
         return result;
-    }catch(error){
-        console.log(error);
-    }
-}
-
-export const insertOne = async (user) => {
-    let db = new Db();
-
-    try{
-        await db.createConnection();
-        await db.prepare('INSERT INTO users (first_name, last_name, email, password, phone_number) VALUES (?,?,?,?,?)');
-        let result = await db.execute([user.firstName, user.lastName, user.email, user.password, user.phoneNumber]);
-
-        return result.insertId;
     }catch(error){
         console.log(error);
     }
