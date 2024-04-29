@@ -5,16 +5,22 @@ import * as projects from '../controllers/projects.js';
 const router = express.Router();
 
 router.post('/', async (req, res) => {
-    let project = {
-        title: req.body.title,
-        content: req.body.content,
-        degree: req.body.degree,
-        projectAuthor
-    }
-
     try{
+        let projectAuthor = 1;
+
+        if(!req.body.title, !req.body.content, !projectAuthor){
+            throw { msg: "Project 'title', 'content' & 'project author' are required to insert a project to the database." }
+        }
+
+        let project = {
+            title: req.body.title,
+            content: req.body.content,
+            degree: req.body.degree || null,
+            projectAuthor
+        }
+
         // DB -> Creating new row in projects table using project object.
-        let projectId = await users.insertOne(user);
+        let projectId = await projects.insertOne(project);
 
         res.status(201).json({
             ok: true,
@@ -22,6 +28,7 @@ router.post('/', async (req, res) => {
             id: projectId
         });
     }catch(error){
+        console.log(error);
         res.status(error.status || 400).json({
             ok: false,
             msg: error.msg || "There was an error creating a project."
@@ -50,14 +57,14 @@ router.get('/:id', async (req, res) => {
     try{
         let project = await projects.getOneById(req.params.id);
 
-        if(project.length <= 0){
+        if(!project){
             throw { status: 404, msg: "Project with specified id doesn't exist in the database." }
         }
-    
+
         res.status(200).json({
             ok: true,
             msg: "Project has been selected successfully.",
-            project: project[0]
+            project: project
         });
     }catch(error){
         res.status(error.status || 400).json({

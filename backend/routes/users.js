@@ -8,15 +8,19 @@ import { auth } from '../middleware/auth.js';
 const router = express.Router();
 
 router.post('/', async (req, res) => {
-    let user = {
-        firstName: req.body.firstName,
-        lastName: req.body.lastName,
-        email: req.body.email,
-        password: '',
-        phoneNumber: req.body.phoneNumber
-    }
-
     try{
+        if(!req.body.firstName, !req.body.lastName, !req.body.email, !req.body.password, !req.body.phoneNumber){
+            throw { msg: "User 'first name', 'last name', 'email', 'password' & 'phone numbers' are required to insert a user to the database." }
+        }
+
+        let user = {
+            firstName: req.body.firstName,
+            lastName: req.body.lastName,
+            email: req.body.email,
+            password: '',
+            phoneNumber: req.body.phoneNumber
+        }
+
         // Check if user with the provided email address already exists in the database.
         if((await users.getOneByEmail(user.email)).length > 0){
             throw { msg: 'User with provided email address already exist.', status: 409 }

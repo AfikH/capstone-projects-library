@@ -26,7 +26,7 @@ class Db{
         }
     }
 
-    async execute(params){
+    async execute(params = []){
         try{
             let [result] = await this.statement.execute([...params]);
             return result;

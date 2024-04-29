@@ -6,7 +6,7 @@ export const insertOne = async (project) => {
     try{
         await db.createConnection();
         await db.prepare('INSERT INTO projects (title, content, project_author) VALUES (?,?,?)');
-        let result = await db.execute([project.title, project.content, project.projectAuthor]);
+        let result = await db.execute([project.title, project.content, parseInt(project.projectAuthor)]);
 
         return result.insertId;
     }catch(error){
