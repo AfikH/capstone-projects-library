@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 
 const AuthenticatedMenu = () => {
     const [menuActive, setMenuActive] = useState(false);
@@ -9,10 +10,14 @@ const AuthenticatedMenu = () => {
                 <img src="../../assets/media/images/icons/chevron-down.svg" alt="▼" className="chevron" />
             </button>
             <div className="main-header-authenticated-menu">
-                <a href="/project/add" title='Add Project'>
+                <Link to="/project/add">
                     <img src="../../assets/media/images/icons/add-project.svg" alt="+" />
                     <span>Add Project</span>
-                </a>
+                </Link>
+                <Link to="/admin/">
+                    <img src="../../assets/media/images/icons/settings.svg" alt="⚙" />
+                    <span>Admin Panel</span>
+                </Link>
             </div>
         </div>
     )

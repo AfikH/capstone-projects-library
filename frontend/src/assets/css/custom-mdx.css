@@ -1,0 +1,33 @@
+.mdxeditor{
+	padding: var(--size-tin);
+	border: 1px solid rgba(var(--rgb-on-bg), 0.25);
+	border-radius: 5px;
+	display: flex;
+  	flex-flow: column nowrap;
+}
+
+.mdxeditor-toolbar{
+	padding: var(--size-sml);
+	border-radius: 5px;
+	background: rgba(var(--rgb-on-bg), 0.075);
+}
+
+.mdxeditor-root-contenteditable{
+	height: 100%;
+}
+
+._contentEditable_1qea1_356{
+	padding: var(--size-mid) var(--size-tin);
+	height: 100%;
+}
+
+._selectTrigger_1qea1_285{
+	padding: var(--size-tin);
+	border-radius: 5px;
+	width: auto;
+	font-size: inherit;
+}
+
+._tooltipTrigger_1qea1_640 select option{
+	font-size: inherit !important;
+}

@@ -1,10 +1,12 @@
-import MainHeader from '../MainHeader/Header.jsx';
+import { Outlet } from 'react-router-dom';
 
-const MainLayout = ({ children }) => (
-    <div>
-        <MainHeader/>
-        <div>{children}</div>
-    </div>
+import MainHeader from './MainHeader/Header.jsx';
+
+const MainLayout = () => (
+	<>
+		<MainHeader />
+        <Outlet />
+	</>
 );
 
 export default MainLayout;

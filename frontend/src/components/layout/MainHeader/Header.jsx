@@ -1,17 +1,20 @@
 import AuthenticatedMenu from './AuthenticatedMenu.jsx';
+import { Link } from 'react-router-dom';
 
-const authenticated = true;
+import logo from '../../../assets/media/images/logo.svg';
+
+const authenticated = false;
 
 const MainHeader = () => (
     <header className="main-header">
-        <div className="main-header-logo">
-            <img src="https://placehold.co/400x200" alt="Capstone Projects Library" />
-        </div>
+        <h1 className="main-header-logo">
+            <Link to="/"><img src={logo} alt="Capstone Projects Library" /></Link>
+        </h1>
         {
         !authenticated ?
             <div className="main-header-guest">
-                <a href="/user/sign-in">Signin</a>
-                <a href="/user/sign-up">Signup</a>
+                <Link to="/user/sign-in">Signin</Link>
+                <Link to="/user/sign-up">Signup</Link>
             </div>
         :
             <div className="main-header-authenticated">
