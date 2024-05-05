@@ -5,7 +5,7 @@ export const insertOne = async (user) => {
 
     try{
         await db.createConnection();
-        await db.prepare('INSERT INTO users (first_name, last_name, email, password, phone_number) VALUES (?,?,?,?,?)');
+        await db.prepare('INSERT INTO users (user_firstname, user_lastname, user_email, user_password, user_phone_number) VALUES (?,?,?,?,?)');
         let result = await db.execute([user.firstName, user.lastName, user.email, user.password, user.phoneNumber]);
 
         return result.insertId;
@@ -19,7 +19,7 @@ export const getOneById = async (id) => {
 
     try{
         await db.createConnection();
-        await db.prepare('SELECT user_id, email, first_name, last_name, phone_number FROM users WHERE user_id=? LIMIT 1');
+        await db.prepare('SELECT user_id, user_email, user_firstname, user_lastname, user_phone_number FROM users WHERE user_id=? LIMIT 1');
         let result = await db.execute([parseInt(id)]);
 
         return result;
@@ -33,7 +33,7 @@ export const getOneByEmail = async (email) => {
 
     try{
         await db.createConnection();
-        await db.prepare('SELECT * FROM users WHERE email=? LIMIT 1');
+        await db.prepare('SELECT * FROM users WHERE user_email=? LIMIT 1');
         let result = await db.execute([email]);
 
         return result;
@@ -62,10 +62,24 @@ export const getHashedPasswordByEmail = async (email) => {
 
     try{
         await db.createConnection();
-        await db.prepare('SELECT password FROM users WHERE email=?');
+        await db.prepare('SELECT user_id, user_password FROM users WHERE user_email=? LIMIT 1');
         let result = await db.execute([email]);
 
-        return result[0].password;
+        return { id: result[0].user_id, hashedPassword: result[0].user_password };
+    }catch(error){
+        console.log(error);
+    }
+}
+
+export const checkIfAdmin = async (id, email) => {
+    let db = new Db();
+
+    try{
+        await db.createConnection();
+        await db.prepare('SELECT user_admin FROM users WHERE user_id=? AND user_email=? LIMIT 1');
+        let result = await db.execute([id, email]);
+
+        return Boolean(result[0].user_admin);
     }catch(error){
         console.log(error);
     }

@@ -6,11 +6,11 @@ POST http://localhost:8000/users HTTP/1.1
 content-type: application/json
 
 {
-    "firstName": "Afik",
-    "lastName": "Habaz",
-    "email": "afikhabaz@gmail.com",
-    "password": "123456",
-    "phoneNumber": "+972 526781505"
+    "firstName": "",
+    "lastName": "",
+    "email": "",
+    "password": "",
+    "phoneNumber": ""
 }
 
 ###

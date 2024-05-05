@@ -1,4 +1,4 @@
-import Editor from "../components/general/Editor";
+import Editor from "../components/General/Editor";
 
 const AddProject = () => {
 

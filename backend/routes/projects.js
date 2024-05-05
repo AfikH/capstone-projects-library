@@ -1,10 +1,12 @@
 import express from 'express';
 
 import * as projects from '../controllers/projects.js';
+import { auth } from '../middleware/auth.js';
 
 const router = express.Router();
 
-router.post('/', async (req, res) => {
+// insert project
+router.post('/', auth(), async (req, res) => {
     try{
         let projectAuthor = 1;
 
@@ -36,6 +38,7 @@ router.post('/', async (req, res) => {
     }
 });
 
+// get all projects
 router.get('/', async (req, res) => {
     try{
         let allProjects = await projects.getAll();
@@ -53,6 +56,7 @@ router.get('/', async (req, res) => {
     }
 });
 
+// get specific project
 router.get('/:id', async (req, res) => {
     try{
         let project = await projects.getOneById(req.params.id);
@@ -74,7 +78,8 @@ router.get('/:id', async (req, res) => {
     }
 });
 
-router.put('/:id', (req, res) => {
+// update project
+router.put('/:id', auth(), (req, res) => {
     // TODO:: Update project data with req.body data
 
     res.status(200).json({
@@ -83,7 +88,8 @@ router.put('/:id', (req, res) => {
     });
 });
 
-router.delete('/:id', async (req, res) => {
+// delete project
+router.delete('/:id', auth(), async (req, res) => {
     try{
         if((await projects.deleteOne(req.params.id) <= 0)){
             throw { status: 404, msg: "Project with specified id doesn't exist in the database." }

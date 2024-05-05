@@ -1,9 +1,11 @@
 import { Link } from "react-router-dom";
 
+import AuthComponent from '../General/AuthComponent.jsx';
+
 const ProjectsList = ({ projects = [] }) => (
 	<>
 	{projects.length <= 0 ?
-		<span>Couldn't find any projects, <Link to="/project/add">Create a new project.</Link></span>
+		<span>Couldn't find any projects. <AuthComponent><Link to="/project/add">Create a new project</Link></AuthComponent></span>
 	:
 		projects.map((project, index) => (
 			<Link key={index} to={`/project/${project.id}`} className="project-container">

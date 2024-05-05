@@ -62,7 +62,7 @@ a:visited{
 	color: var(--color-theme);
 }
 
-button.main-button{
+.main-button{
 	padding: var(--size-mid);
 	background: var(--color-theme);
 	border: none;
@@ -71,6 +71,19 @@ button.main-button{
 	font-size: 4.5rem;
 	font-weight: 500;
 	cursor: pointer;
+}
+
+a.main-button,
+a.main-button:link,
+a.main-button:visited{
+	color: var(--color-background-0);
+	text-decoration: none;
+}
+
+.main-button:disabled,
+.main-button:disabled{
+	background: rgba(var(--rgb-on-bg), 0.05);
+	pointer-events: none;
 }
 
 ul.form-errors{
@@ -209,7 +222,8 @@ ul.form-errors.positive li::marker{
 
 .main-header-authenticated-menu > a,
 .main-header-authenticated-menu > a:link,
-.main-header-authenticated-menu > a:visited{
+.main-header-authenticated-menu > a:visited,
+.main-header-authenticated-menu > button{
     padding: var(--size-sml);
     color: var(--color-text-2);
     text-decoration: none;
@@ -218,10 +232,17 @@ ul.form-errors.positive li::marker{
     flex-flow: row nowrap;
     align-items: center;
     gap: var(--size-mid);
+	border: none;
+	background: transparent;
+	font-family: inherit;
+	font-size: 4rem;
+	line-height: 1;
+	cursor: pointer;
     transition: background .1s;
 }
 
-.main-header-authenticated-menu > a img{
+.main-header-authenticated-menu > a img,
+.main-header-authenticated-menu > button img{
 	width: 20px;
 	object-fit: contain;
 	object-position: center;
@@ -229,7 +250,8 @@ ul.form-errors.positive li::marker{
 }
 
 .main-header-authenticated-menu > a:hover,
-.main-header-authenticated-menu > a.active{
+.main-header-authenticated-menu > a.active,
+.main-header-authenticated-menu > button:hover{
     background: rgba(var(--rgb-on-bg), 0.05);
 }
 
