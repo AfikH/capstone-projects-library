@@ -22,6 +22,7 @@ class Db{
         try{
             this.statement = await this.connection.prepare(query);
         }catch(errors){
+			console.log(errors);
             throw {msg: 'Error preparing statement.', location: '/backend/lib/db.js:21', function: 'prepare()'};
         }
     }
@@ -29,14 +30,17 @@ class Db{
     async execute(params = []){
         try{
             let [result] = await this.statement.execute([...params]);
+			this.closeConnection();
             return result;
         }catch(errors){
-            throw {msg: 'Error executing statement.', location: '/backend/lib/db.js:29', function: 'execute()'};
+            throw {msg: 'Error executing statement.', location: '/backend/lib/db.js:30', function: 'execute()'};
         }
     }
 
     closeConnection(){
-
+		this.connection.end(error => {
+			if(error) throw {msg: 'Error closing connection.', location: '/backend/lib/db.js:39', function: 'closeConnection()'};
+		});
     }
 }
 

@@ -1,7 +1,7 @@
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 
 import graphic from '../assets/media/images/login.svg';
-import { useState } from 'react';
 
 const SignUp = () => {
 	const [alert, setAlert] = useState({});
@@ -15,29 +15,36 @@ const SignUp = () => {
 		let {passwordConfirmation, ...user} = {
 			firstName: input.get('first-name'),
 			lastName: input.get('last-name'),
-			email: input.get('email'),
+			email: input.get('email-address'),
 			password: input.get('password'),
 			passwordConfirmation: input.get('password-confirmation'),
 			phoneNumber: input.get('phone-number')
 		};
 
 		try{
-			// if(!user.firstName || !user.lastName || !user.email || !user.password || !passwordConfirmation || !user.phoneNumber){
-			// 	throw { type: "negative", messages: ["All form fields are required"] };
-			// }
+			if(!user.firstName || !user.lastName || !user.email || !user.password || !passwordConfirmation || !user.phoneNumber){
+				throw { type: "negative", messages: ["All form fields are required"] };
+			}
 
-			// if(user.password !== passwordConfirmation){
-			// 	throw { type: "negative", messages: ["Password confirmation doesn't equal to password field"] };
-			// }
+			if(user.password !== passwordConfirmation){
+				throw { type: "negative", messages: ["Password confirmation doesn't equal to password field"] };
+			}
 
-			let response = await fetch(`${import.meta.env.VITE_BACKEND_BASE_URL}/user`, {
+			let response = await fetch(`${import.meta.env.VITE_BACKEND_BASE_URL}/users`, {
 				method: 'POST',
-				body: user
+				body: JSON.stringify(user),
+				headers: {
+					"Content-Type": "application/json"
+				}
 			});
 
 			response = await response.json();
 
-			console.log(response);
+			if(!response.ok){
+				throw { type: "negative", messages: [response.msg || ""] };
+			}
+
+			setAlert({ type: "positive", messages: ["Your user has been created successfully."] });
 		}catch(error){
 			console.log(error);
 			setAlert({ type: error.type || "negative", messages: error.messages || ["Something wen't wrong please try again later."] });

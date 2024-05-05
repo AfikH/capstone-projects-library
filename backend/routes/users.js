@@ -9,17 +9,20 @@ const router = express.Router();
 
 router.post('/', async (req, res) => {
     try{
-        if(!req.body.firstName, !req.body.lastName, !req.body.email, !req.body.password, !req.body.phoneNumber){
-            throw { msg: "User 'first name', 'last name', 'email', 'password' & 'phone numbers' are required to insert a user to the database." }
+		console.log(req.body);
+        let user = {
+            firstName: req.body.firstName || '',
+            lastName: req.body.lastName || '',
+            email: req.body.email || '',
+            password: req.body.password || '',
+            phoneNumber: req.body.phoneNumber || ''
         }
 
-        let user = {
-            firstName: req.body.firstName,
-            lastName: req.body.lastName,
-            email: req.body.email,
-            password: '',
-            phoneNumber: req.body.phoneNumber
-        }
+		// Check if all fields provided.
+		const emptyProperties = Object.keys(user).filter(property => !user[property]);
+		if(emptyProperties.length > 0){
+			throw { msg: `Fields: ${emptyProperties.toString()} wasn't provided and are required in order to create a new user.` }
+		}
 
         // Check if user with the provided email address already exists in the database.
         if((await users.getOneByEmail(user.email)).length > 0){
@@ -61,7 +64,7 @@ router.get('/:id', async (req, res) => {
     }catch(error){
         res.status(error.status || 400).json({
             ok: false,
-            msg: error.msg || "There was an error creating a user."
+            msg: error.msg || "There was an error getting the user from the database."
         });
     }
 });
@@ -93,9 +96,9 @@ router.delete('/:id', async (req, res) => {
     }
 });
 
-router.post('/authenticate', async (req, res) => {
+router.post('/sign-in', async (req, res) => {
     try{
-        let hashedPassword = await users.getHashedPasswordByEmail(req.body.email);
+        let {id, hashedPassword} = await users.getHashedPasswordByEmail(req.body.email);
         
         let authenticated = await bcrypt.compare(req.body.password, hashedPassword);
 
@@ -103,16 +106,10 @@ router.post('/authenticate', async (req, res) => {
             throw { status: 401, msg: "Wrong email or password." }
         }
 
-        // Set cookie    
-        res.cookie('access_token', token.generate(req.body.email), {
-            maxAge: 1000 * 60 * 15, // would expire after 15 minutes
-            httpOnly: true, // The cookie only accessible by the web server
-            signed: true // Indicates if the cookie should be signed
-        });
-
         res.status(200).json({
             ok: true,
-            msg: "User has been authenticated successfully."
+            msg: "User has been authenticated successfully.",
+			token: token.generate({ id: id, email: req.body.email })
         });
     }catch(error){
         console.log(error);
@@ -121,6 +118,27 @@ router.post('/authenticate', async (req, res) => {
             msg: error.msg || "There was an error authenticating the user."
         });
     }
+});
+
+router.post('/auth', async (req, res) => {
+	try{
+		let decoded = token.verify(req.body.token);
+
+		let authorized = await users.checkIfAdmin(decoded.data.id, decoded.data.email);
+
+		if(!authorized) throw { status: 401, msg: "User is not authorized." }
+
+		res.status(200).json({
+            ok: true,
+            msg: "User is authorized."
+        });
+	}catch(error){
+		console.log(error);
+        res.status(error.status || 400).json({
+            ok: false,
+            msg: error.msg || "There was an error authorizing the user."
+        });
+	}
 });
 
 export default router;

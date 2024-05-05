@@ -18,16 +18,16 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use(cookieParser('secret'));
 
-// cors();
+app.use(cors());
 
-app.use((req, res, next) => {
-	res.setHeader('Access-Control-Allow-Origin', 'http://localhost:5173');
-	res.setHeader('Access-Control-Allow-Methods', 'POST, GET, PUT, PATCH, DELETE');
-	res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
-	res.setHeader('Access-Control-Allow-Credentials', true);
+// app.use((req, res, next) => {
+// 	res.setHeader('Access-Control-Allow-Origin', 'http://localhost:5173');
+// 	res.setHeader('Access-Control-Allow-Methods', 'POST, GET, PUT, PATCH, DELETE');
+// 	res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
+// 	res.setHeader('Access-Control-Allow-Credentials', true);
 
-	next();
-})
+// 	next();
+// })
 
 app.use('/users', userRoutes);
 app.use('/projects', projectRoutes);
