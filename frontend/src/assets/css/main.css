@@ -62,14 +62,16 @@ a:visited{
 	color: var(--color-theme);
 }
 
-.main-button{
+.main-button,
+a.main-button,
+button.main-button{
 	padding: var(--size-mid);
 	background: var(--color-theme);
 	border: none;
 	border-radius: 5px;
 	color: var(--color-background-0);
 	font-size: 4.5rem;
-	font-weight: 500;
+	font-weight: 400;
 	cursor: pointer;
 }
 
@@ -295,6 +297,12 @@ ul.form-errors.positive li::marker{
 .page-home-projects-list{
 	display: flex;
 	flex-flow: column nowrap;
+	transition: opacity .3s;
+}
+
+.page-home-projects-list.loading{
+	opacity: 0.1;
+	pointer-events: none;
 }
 
 .page-home-projects-list .project-container:not(:last-child){
@@ -443,33 +451,62 @@ ul.form-errors.positive li::marker{
 	align-self: flex-start;
 }
 
-/* page: add project */
-.page-add-project{
+/* page: add project, edit project, edit user */
+.page-add-project,
+.page-edit-project,
+.page-edit-user{
 	padding: var(--size-lrg) var(--size-con);
-	min-height: calc(100vh - var(--main-header-height));
-	min-height: calc(100dvh - var(--main-header-height));
 	display: flex;
 	flex-flow: column nowrap;
 	gap: var(--size-big);
 }
 
-.page-add-project-form-container{
+.page-add-project,
+.page-edit-project{
+	min-height: calc(100vh - var(--main-header-height));
+	min-height: calc(100dvh - var(--main-header-height));
+}
+
+.page-edit-user{
+	border: 1px solid rgba(var(--rgb-on-bg), 0.05);
+	border-radius: 15px;
+}
+
+.page-add-project-form-container,
+.page-edit-project-form-container,
+.page-edit-user-form-container{
 	flex: 1;
 	display: flex;
 }
 
-.page-add-project-form-container form{
+.page-edit-user-form-container{
+	flex-flow: column nowrap;
+	gap: var(--size-lrg);
+}
+
+.page-edit-user-form-container .title{
+	font-size: 6rem;
+	font-weight: 500;
+}
+
+.page-add-project-form-container form,
+.page-edit-project-form-container form,
+.page-edit-user-form-container form{
 	flex: 1;
 	display: flex;
 	flex-flow: column nowrap;
 	gap: var(--size-mid);
 }
 
-.page-add-project-form-container form .mdxeditor{
+.page-add-project-form-container form .mdxeditor,
+.page-edit-project-form-container form .mdxeditor,
+.page-edit-user-form-container form .mdxeditor{
 	flex: 1;
 }
 
-.page-add-project-form-buttons-container{
+.page-add-project-form-buttons-container,
+.page-edit-project-form-buttons-container,
+.page-edit-user-form-buttons-container{
 	width: 100%;
 	display: flex;
 	flex-flow: row wrap;
@@ -477,7 +514,9 @@ ul.form-errors.positive li::marker{
 	gap: var(--size-mid);
 }
 
-.page-add-project-form-buttons-container button{
+.page-add-project-form-buttons-container button,
+.page-edit-project-form-buttons-container button,
+.page-edit-user-form-buttons-container button{
 	min-width: 150px;
 }
 
@@ -568,8 +607,8 @@ ul.form-errors.positive li::marker{
 	border-radius: 10px;
 }
 
-.admin-projects-page-project .name,
-.admin-users-page-user .name{
+.admin-projects-page-project .project-title,
+.admin-users-page-user .user-name{
 	flex: 1;
 }
 
@@ -581,7 +620,9 @@ ul.form-errors.positive li::marker{
 }
 
 .admin-projects-page-project-buttons button,
-.admin-users-page-user-buttons button{
+.admin-users-page-user-buttons button,
+.admin-projects-page-project-buttons a,
+.admin-users-page-user-buttons a{
 	padding: var(--size-tin);
 	height: 30px;
 	width: 30px;
@@ -593,7 +634,9 @@ ul.form-errors.positive li::marker{
 }
 
 .admin-projects-page-project-buttons button img,
-.admin-users-page-user-buttons button img{
+.admin-users-page-user-buttons button img,
+.admin-projects-page-project-buttons a img,
+.admin-users-page-user-buttons a img{
 	height: 100%;
 	width: 100%;
 	object-fit: contain;
@@ -601,7 +644,9 @@ ul.form-errors.positive li::marker{
 }
 
 .admin-projects-page-project-buttons button:hover,
-.admin-users-page-user-buttons button:hover{
+.admin-users-page-user-buttons button:hover,
+.admin-projects-page-project-buttons a:hover,
+.admin-users-page-user-buttons a:hover{
 	background: rgba(var(--rgb-on-bg), 0.25);
 }
 

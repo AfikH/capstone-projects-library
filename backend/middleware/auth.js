@@ -6,12 +6,13 @@ export const auth = (admin = false) => {
 		let {success, data} = token.verify(req.headers.authorization);
 
         if(!success) return res.status(401).json({ ok: false, msg: "Not authticated." });
-        if(admin){
-			let authorized = await checkIfAdmin(decoded.data.id, decoded.data.email);
 
-			if(!authorized) return res.status(401).json({ ok: false, msg: "Not authorized." });
-        }
+		let authorized = await checkIfAdmin(data.id, data.email);
 
+        if(admin && !authorized) return res.status(401).json({ ok: false, msg: "Not authorized." });
+		
+		req.body.userIsAdmin = authorized ? true : false;
+		req.body.userId = data.id;
 
         next();
     }

@@ -16,9 +16,9 @@ import {
 import '@mdxeditor/editor/style.css';
 import '../../assets/css/custom-mdx.css';
 
-const Editor = () => (
+const Editor = ({ editorRef, ...props }) => (
 	<MDXEditor
-		markdown="# Hello world"
+		markdown={props.defaultValue || ''}
 		plugins={[
 			headingsPlugin(),
 			linkDialogPlugin(),
@@ -40,7 +40,8 @@ const Editor = () => (
 				)
 			})	  
 		]}
-		
+		placeholder="Project Content..."
+		ref={editorRef}
 	/>
 )
 

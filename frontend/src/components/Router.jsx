@@ -1,4 +1,4 @@
-import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import { createBrowserRouter, RouterProvider, useLoaderData } from 'react-router-dom';
 
 import Home from '../pages/Home.jsx';
 import Project from '../pages/Project.jsx';
@@ -11,21 +11,60 @@ import AddProject from '../pages/AddProject.jsx';
 import AdminUsers from '../pages/admin/AdminUsers.jsx';
 import MainAdminLayout from './Layout/MainAdminLayout.jsx';
 import AuthRoute from './General/AuthRoute.jsx';
+import EditProject from '../pages/EditProject.jsx';
 import useAuth from '../hooks/useAuth.js';
+import AdminUserEdit from '../pages/admin/AdminUserEdit.jsx';
 
 const Router = () => {
 	const { user } = useAuth();
 
 	const loadProjects = async () => {
 		try{
-			let response = await fetch(`${import.meta.env.VITE_BACKEND_BASE_URL}/projects`, {
+			let response = await fetch(`${import.meta.env.VITE_BACKEND_BASE_URL}/projects`);
+			response = await response.json();
+	
+			return response.projects || [];
+		}catch(error){
+			return [];
+		}
+	}
+
+	const loadProject = async ({ params }) => {
+		try{
+			let response = await fetch(`${import.meta.env.VITE_BACKEND_BASE_URL}/projects/${params.project_id}`);
+			response = await response.json();
+	
+			return response.project || {};
+		}catch(error){
+			return [];
+		}
+	}
+
+	const loadUsers = async () => {
+		try{
+			let response = await fetch(`${import.meta.env.VITE_BACKEND_BASE_URL}/users`, {
 				headers: {
-					'Authorization': user || ''
+					"Authorization": user || ''
 				}
 			});
-			let projects = await response.json();
+			response = await response.json();
 	
-			return projects.projects || [];
+			return response.users || [];
+		}catch(error){
+			return [];
+		}
+	}
+
+	const loadUser = async ({ params }) => {
+		try{
+			let response = await fetch(`${import.meta.env.VITE_BACKEND_BASE_URL}/users/${params.user_id}`, {
+				headers: {
+					"Authorization": user || ''
+				}
+			});
+			response = await response.json();
+	
+			return response.user || {};
 		}catch(error){
 			return [];
 		}
@@ -45,25 +84,38 @@ const Router = () => {
 					children: [
 						{
 							path: "add",
-							element: <AddProject />
+							element: <AuthRoute><AddProject /></AuthRoute>
+						},
+						{
+							path: "edit/:project_id",
+							loader: loadProject,
+							element: <AuthRoute><EditProject /></AuthRoute>
 						},
 						{
 							path: ":project_id",
+							loader: loadProject,
 							element: <Project />
 						},
 					]
 				},
 				{
 					path: "/admin/",
-					element: <AuthRoute><MainAdminLayout /></AuthRoute>,
+					element: <AuthRoute admin={true}><MainAdminLayout /></AuthRoute>,
 					children: [
 						{
 							path: "projects",
+							loader: loadProjects,
 							element: <AdminProjects />
 						},
 						{
 							path: "users",
+							loader: loadUsers,
 							element: <AdminUsers />
+						},
+						{
+							path: "user/edit/:user_id",
+							loader: loadUser,
+							element: <AdminUserEdit />
 						}
 					]
 				},

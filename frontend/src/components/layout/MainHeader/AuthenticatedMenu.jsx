@@ -18,7 +18,7 @@ const AuthenticatedMenu = () => {
             <button className="main-header-authenticated-menu-button" title='Toggle User Menu' onClick={() => setMenuActive(!menuActive)}>
                 <img src={chevronImage} alt="▼" className="chevron" />
             </button>
-            <div className="main-header-authenticated-menu">
+            <div className="main-header-authenticated-menu" onClick={() => setMenuActive(false)}>
                 <Link to="/project/add">
                     <img src={addProjectImage} alt="+" />
                     <span>Add Project</span>

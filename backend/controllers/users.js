@@ -6,7 +6,7 @@ export const insertOne = async (user) => {
     try{
         await db.createConnection();
         await db.prepare('INSERT INTO users (user_firstname, user_lastname, user_email, user_password, user_phone_number) VALUES (?,?,?,?,?)');
-        let result = await db.execute([user.firstName, user.lastName, user.email, user.password, user.phoneNumber]);
+        let result = await db.execute([user.firstName, user.lastName, user.email.toLowerCase(), user.password, user.phoneNumber]);
 
         return result.insertId;
     }catch(error){
@@ -19,7 +19,7 @@ export const getOneById = async (id) => {
 
     try{
         await db.createConnection();
-        await db.prepare('SELECT user_id, user_email, user_firstname, user_lastname, user_phone_number FROM users WHERE user_id=? LIMIT 1');
+        await db.prepare('SELECT user_id, user_email, user_firstname, user_lastname, user_phone_number, user_admin FROM users WHERE user_id=? LIMIT 1');
         let result = await db.execute([parseInt(id)]);
 
         return result;
@@ -33,12 +33,43 @@ export const getOneByEmail = async (email) => {
 
     try{
         await db.createConnection();
-        await db.prepare('SELECT * FROM users WHERE user_email=? LIMIT 1');
+        await db.prepare('SELECT user_id, user_email FROM users WHERE user_email=? LIMIT 1');
         let result = await db.execute([email]);
 
         return result;
     }catch(error){
         console.log(error);
+    }
+}
+
+export const getAll = async () => {
+	let db = new Db();
+
+    try{
+		await db.createConnection();
+        await db.prepare('SELECT user_id, user_firstname, user_lastname FROM users');
+        let result = await db.execute();
+
+        return result;
+    }catch(error){
+        console.log(error);
+    }
+}
+
+export const updateOne = async (user) => {
+	let db = new Db();
+
+    try{
+        await db.createConnection();
+        await db.prepare(`UPDATE users SET user_firstname=?, user_lastname=?, user_email=?,${user.password ? ' user_password=?,' : ''} user_phone_number=?, user_admin=? WHERE user_id=?`);
+		let escaped = [user.firstName, user.lastName, user.email.toLowerCase(), user.phoneNumber, user.admin, parseInt(user.id)];
+		if(user.password) escaped = [user.firstName, user.lastName, user.email.toLowerCase(), user.password, user.phoneNumber, user.admin, parseInt(user.id)];
+        let result = await db.execute(escaped);
+
+        return result.affectedRows;
+    }catch(error){
+        console.log(error);
+        throw new Error();
     }
 }
 

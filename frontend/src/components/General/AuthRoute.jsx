@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 
 import useAuth from "../../hooks/useAuth";
 
-const AuthRoute = ({ signedIn = true, path = '/', children }) => {
+const AuthRoute = ({ signedIn = true, admin=false, path = '/', children }) => {
 	const [loading, setLoading] = useState(true);
 	const [redirect, setRedirect] = useState(true);
 	const { user } = useAuth();
@@ -16,6 +16,8 @@ const AuthRoute = ({ signedIn = true, path = '/', children }) => {
 		
 				// Validate that is logged in by asking backend
 				if(signedIn){
+					if(!admin) return setRedirect(false);
+
 					let response = await fetch(`${import.meta.env.VITE_BACKEND_BASE_URL}/users/auth`, {
 						method: 'POST',
 						body: JSON.stringify({token: user}),

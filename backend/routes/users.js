@@ -7,6 +7,7 @@ import { auth } from '../middleware/auth.js';
 
 const router = express.Router();
 
+// insert user
 router.post('/', async (req, res) => {
     try{
 		console.log(req.body);
@@ -48,7 +49,8 @@ router.post('/', async (req, res) => {
     }
 });
 
-router.get('/:id', async (req, res) => {
+// get specific user
+router.get('/:id', auth(), async (req, res) => {
     try{
         let user = await users.getOneById(req.params.id);
 
@@ -69,16 +71,69 @@ router.get('/:id', async (req, res) => {
     }
 });
 
-router.put('/:id', auth(), (req, res) => {
-    // TODO:: Update user data with req.body data
+// get all users
+router.get('/', auth(true), async (req, res) => {
+    try{
+		let allUsers = await users.getAll();
 
-    res.status(200).json({
-        ok: true,
-        msg: "User has been updated successfully."
-    });
+        if(allUsers.length <= 0){
+            throw { status: 404, msg: "No users found." }
+        }
+    
+        res.status(200).json({
+            ok: true,
+            msg: "Users has been selected successfully.",
+            users: allUsers
+        });
+    }catch(error){
+        res.status(error.status || 400).json({
+            ok: false,
+            msg: error.msg || "There's a problem getting users from the database."
+        });
+    }
 });
 
-router.delete('/:id', async (req, res) => {
+// update user
+router.put('/:id', auth(true), async (req, res) => {
+	try{
+		let user = {
+			id: req.params.id,
+			firstName: req.body.firstName,
+			lastName: req.body.lastName,
+			email: req.body.email.toLowerCase(),
+			phoneNumber: req.body.phoneNumber,
+			admin: req.body.admin
+		}
+
+		let userFromDb = await users.getOneByEmail(user.email);
+
+		// Check if user with the provided email address already exists in the database.
+        if(userFromDb.length > 0 && userFromDb[0].user_id !== parseInt(user.id)){
+            throw { msg: 'User with provided email address already exist.', status: 409 }
+        }
+
+        if(req.body.password){
+			user.password = await bcrypt.hash(req.body.password, 12);
+		}
+
+		let affectedRows = await users.updateOne(user);
+
+		if(affectedRows <= 0) throw {}
+
+        res.status(200).json({
+			ok: true,
+			msg: "User has been updated successfully."
+		});
+    }catch(error){
+        res.status(error.status || 400).json({
+            ok: false,
+            msg: error.msg || "There was an error updating the user."
+        });
+    }
+});
+
+// delete user
+router.delete('/:id', auth(true), async (req, res) => {
     try{
         if((await users.deleteOne(req.params.id) <= 0)){
             throw { status: 404, msg: "User with specified id doesn't exist in the database." }
@@ -96,6 +151,7 @@ router.delete('/:id', async (req, res) => {
     }
 });
 
+// signin
 router.post('/sign-in', async (req, res) => {
     try{
         let {id, hashedPassword} = await users.getHashedPasswordByEmail(req.body.email);
@@ -120,6 +176,7 @@ router.post('/sign-in', async (req, res) => {
     }
 });
 
+// auth
 router.post('/auth', async (req, res) => {
 	try{
 		let decoded = token.verify(req.body.token);

@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 
 import useAuth from "../../hooks/useAuth";
 
-const AuthComponent = ({ signedIn = true, admin=false, children }) => {
+const AuthComponent = ({ signedIn = true, admin=false, id=false, children }) => {
 	const [loading, setLoading] = useState(true);
 	const [auth, setAuth] = useState(false);
 	const { user } = useAuth();

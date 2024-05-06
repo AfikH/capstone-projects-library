@@ -8,9 +8,7 @@ const router = express.Router();
 // insert project
 router.post('/', auth(), async (req, res) => {
     try{
-        let projectAuthor = 1;
-
-        if(!req.body.title, !req.body.content, !projectAuthor){
+		if(!req.body.title, !req.body.content, !req.body.userId){
             throw { msg: "Project 'title', 'content' & 'project author' are required to insert a project to the database." }
         }
 
@@ -18,7 +16,7 @@ router.post('/', auth(), async (req, res) => {
             title: req.body.title,
             content: req.body.content,
             degree: req.body.degree || null,
-            projectAuthor
+            author: req.body.userId
         }
 
         // DB -> Creating new row in projects table using project object.
@@ -79,13 +77,33 @@ router.get('/:id', async (req, res) => {
 });
 
 // update project
-router.put('/:id', auth(), (req, res) => {
-    // TODO:: Update project data with req.body data
+router.put('/:id', auth(), async (req, res) => {
+	try{
+		let projectFromDb = await projects.getOneById(req.params.id, false);
 
-    res.status(200).json({
-        ok: true,
-        msg: "Project has been updated successfully."
-    });
+		if(!projectFromDb) throw { status: 404, msg: "Project with specified id doesn't exist in the database." }
+
+		if(projectFromDb.project_author !== req.body.userId && !req.body.userIsAdmin) throw { status: 401, msg: "Not authorized to edit specified project." }
+
+        let affectedRows = await projects.updateOne({
+			id: req.params.id,
+			title: req.body.title,
+			degree: req.body.degree,
+			content: req.body.content
+		});
+
+		if(affectedRows <= 0) throw {}
+
+        res.status(200).json({
+			ok: true,
+			msg: "Project has been updated successfully."
+		});
+    }catch(error){
+        res.status(error.status || 400).json({
+            ok: false,
+            msg: error.msg || "There was an error updating the project."
+        });
+    }
 });
 
 // delete project

@@ -15,8 +15,8 @@ const SignIn = () => {
 		let input = new FormData(e.target);
 
 		let user = {
-			email: input.get('email-address'),
-			password: input.get('password')
+			email: input.get('email-address') || '',
+			password: input.get('password') || ''
 		};
 
 		try{
@@ -42,7 +42,6 @@ const SignIn = () => {
 
 			setAlert({ type: "positive", messages: ["Signed In succesfully."] });
 		}catch(error){
-			console.log(error);
 			setAlert({ type: error.type || "negative", messages: error.messages || ["Something wen't wrong please try again later."] });
 		}
 	}
