@@ -7,15 +7,15 @@ const useAuth = () => {
 	const { user, addUser, removeUser, setUser } = useUser();
 	const { getItem } = useCookie();
 
-	useEffect(() => {
-		const token = getItem("auth");
-		if(token){
-			addUser(token);
-		}
-	}, [addUser, getItem]);
+	// useEffect(() => {
+	// 	const userData = getItem("auth");
+	// 	if(userData){
+	// 		addUser(userData);
+	// 	}
+	// }, [addUser, getItem]);
 
-	const signin = (token) => {
-		addUser(token);
+	const signin = (userData) => {
+		addUser(userData);
 	};
 
 	const signout = () => {

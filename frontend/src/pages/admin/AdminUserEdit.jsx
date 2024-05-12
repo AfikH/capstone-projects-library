@@ -35,7 +35,7 @@ const AdminUserEdit = () => {
 				body: JSON.stringify(formData),
 				headers: {
 					"Content-Type": "application/json",
-					"Authorization": user || ''
+					"Authorization": user.token || ''
 				}
 			});
 

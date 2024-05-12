@@ -8,9 +8,9 @@ const useUser = () => {
 	const { user, setUser } = useContext(AuthContext);
 	const { setItem } = useCookie();
 
-	const addUser = (token) => {
-		setUser(token);
-		setItem("auth", token);
+	const addUser = (userData) => {
+		setUser(userData);
+		setItem("auth", userData);
 	};
 
 	const removeUser = () => {

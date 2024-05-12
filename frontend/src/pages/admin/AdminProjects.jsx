@@ -15,7 +15,7 @@ const AdminProjects = () => {
 			let response = await fetch(`${import.meta.env.VITE_BACKEND_BASE_URL}/projects/${id}`, {
 				method: 'DELETE',
 				headers: {
-					"Authorization": user || ''
+					"Authorization": user.token || ''
 				}
 			});
 

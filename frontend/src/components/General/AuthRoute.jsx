@@ -20,7 +20,7 @@ const AuthRoute = ({ signedIn = true, admin=false, path = '/', children }) => {
 
 					let response = await fetch(`${import.meta.env.VITE_BACKEND_BASE_URL}/users/auth`, {
 						method: 'POST',
-						body: JSON.stringify({token: user}),
+						body: JSON.stringify({token: user.token}),
 						headers: {
 							"Content-Type": "application/json"
 						}

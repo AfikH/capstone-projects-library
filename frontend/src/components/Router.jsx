@@ -44,7 +44,7 @@ const Router = () => {
 		try{
 			let response = await fetch(`${import.meta.env.VITE_BACKEND_BASE_URL}/users`, {
 				headers: {
-					"Authorization": user || ''
+					"Authorization": user.token || ''
 				}
 			});
 			response = await response.json();
@@ -59,7 +59,7 @@ const Router = () => {
 		try{
 			let response = await fetch(`${import.meta.env.VITE_BACKEND_BASE_URL}/users/${params.user_id}`, {
 				headers: {
-					"Authorization": user || ''
+					"Authorization": user.token || ''
 				}
 			});
 			response = await response.json();

@@ -93,10 +93,15 @@ export const getHashedPasswordByEmail = async (email) => {
 
     try{
         await db.createConnection();
-        await db.prepare('SELECT user_id, user_password FROM users WHERE user_email=? LIMIT 1');
+        await db.prepare('SELECT user_id, user_password, user_firstname, user_lastname FROM users WHERE user_email=? LIMIT 1');
         let result = await db.execute([email]);
 
-        return { id: result[0].user_id, hashedPassword: result[0].user_password };
+        return {
+            id: result[0].user_id,
+            hashedPassword: result[0].user_password,
+            firstName: result[0].user_firstname,
+            lastName: result[0].user_lastname
+        };
     }catch(error){
         console.log(error);
     }

@@ -154,7 +154,7 @@ router.delete('/:id', auth(true), async (req, res) => {
 // signin
 router.post('/sign-in', async (req, res) => {
     try{
-        let {id, hashedPassword} = await users.getHashedPasswordByEmail(req.body.email);
+        let { id, hashedPassword, firstName, lastName } = await users.getHashedPasswordByEmail(req.body.email);
         
         let authenticated = await bcrypt.compare(req.body.password, hashedPassword);
 
@@ -165,7 +165,8 @@ router.post('/sign-in', async (req, res) => {
         res.status(200).json({
             ok: true,
             msg: "User has been authenticated successfully.",
-			token: token.generate({ id: id, email: req.body.email })
+			token: token.generate({ id: id, email: req.body.email }),
+            raw: { firstName, lastName }
         });
     }catch(error){
         console.log(error);

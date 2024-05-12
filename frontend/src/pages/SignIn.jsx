@@ -38,7 +38,7 @@ const SignIn = () => {
 				throw { type: "negative", messages: [response.msg || ""] };
 			}
 
-			signin(response.token);
+			signin({ token: response.token, raw: response.raw });
 
 			setAlert({ type: "positive", messages: ["Signed In succesfully."] });
 		}catch(error){
